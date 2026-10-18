@@ -35,18 +35,22 @@ else
   port_up 5173 && echo "  已启动 (5173)" || { echo "  ✗ 启动失败，查看 /tmp/frontend.log"; }
 fi
 
-echo "===== 4. mock AI 助手 (8001，可选) ====="
+echo "===== 4. AI 助手服务 (8001，可选) ====="
+# 真实 AI 助手位于独立仓库（FastAPI + ReAct Agent），见根目录 README。
+# 设环境变量 AI_SERVICE_DIR 指向该目录后本脚本会自动拉起；未设置则跳过。
 if port_up 8001; then
   echo "  已在运行，跳过"
+elif [ -n "$AI_SERVICE_DIR" ] && [ -d "$AI_SERVICE_DIR" ]; then
+  ( cd "$AI_SERVICE_DIR" && ./.venv/Scripts/python.exe -m uvicorn app.main:app --host 127.0.0.1 --port 8001 >/tmp/ai-service.log 2>&1 & )
+  for i in $(seq 1 20); do sleep 1; port_up 8001 && break; done
+  port_up 8001 && echo "  已启动 (8001)" || echo "  ⚠ AI 助手启动失败，查看 /tmp/ai-service.log"
 else
-  ( cd "$ROOT" && "$NODE" scripts/mock-ai.js >/tmp/mock-ai.log 2>&1 & )
-  for i in $(seq 1 10); do sleep 1; port_up 8001 && break; done
-  port_up 8001 && echo "  已启动 (8001)" || echo "  ⚠ mock AI 未启动（不影响主功能）"
+  echo "  跳过（未设置 AI_SERVICE_DIR，其余功能不受影响）"
 fi
 
 echo ""
 echo "===== 完成 ====="
 echo "系统地址：http://127.0.0.1:5173"
 echo "后端接口：http://127.0.0.1:8000/api/v1"
-echo "mock AI ：http://127.0.0.1:8001（真实 AI 助手上线后停掉它即可）"
+echo "AI 助手 ：http://127.0.0.1:8001（独立仓库，设 AI_SERVICE_DIR 后自动拉起）"
 echo "账号：admin/admin123456、teacher01/teacher123、student01/student123"

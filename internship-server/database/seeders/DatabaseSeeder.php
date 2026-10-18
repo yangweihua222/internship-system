@@ -44,11 +44,11 @@ class DatabaseSeeder extends Seeder
         );
         $admin->syncRoles(['admin']);
 
-        // 4. 示例老师 / 学生账号
+        // 4. 演示老师 / 学生账号（演示数据，非真实人员）
         $teacher = User::updateOrCreate(
             ['username' => 'teacher01'],
             [
-                'name' => '示例老师',
+                'name' => '李静',
                 'email' => 'teacher01@example.com',
                 'password' => 'teacher123',
                 'type' => User::TYPE_TEACHER,
@@ -61,7 +61,7 @@ class DatabaseSeeder extends Seeder
         $student = User::updateOrCreate(
             ['username' => 'student01'],
             [
-                'name' => '示例学生',
+                'name' => '张明',
                 'email' => 'student01@example.com',
                 'password' => 'student123',
                 'type' => User::TYPE_STUDENT,
@@ -70,5 +70,37 @@ class DatabaseSeeder extends Seeder
             ],
         );
         $student->syncRoles(['student']);
+
+        // 5. 演示用第二批师生
+        $teacher2 = User::updateOrCreate(
+            ['username' => 'teacher02'],
+            [
+                'name' => '王建国',
+                'email' => 'teacher02@example.com',
+                'password' => 'teacher123',
+                'type' => User::TYPE_TEACHER,
+                'department_id' => $surgery->id,
+                'status' => true,
+            ],
+        );
+        $teacher2->syncRoles(['teacher']);
+
+        foreach ([
+            ['username' => 'student02', 'name' => '陈雨欣'],
+            ['username' => 'student03', 'name' => '刘子豪'],
+        ] as $s) {
+            $u = User::updateOrCreate(
+                ['username' => $s['username']],
+                [
+                    'name' => $s['name'],
+                    'email' => $s['username'] . '@example.com',
+                    'password' => 'student123',
+                    'type' => User::TYPE_STUDENT,
+                    'department_id' => $internal->id,
+                    'status' => true,
+                ],
+            );
+            $u->syncRoles(['student']);
+        }
     }
 }

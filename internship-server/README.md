@@ -1,59 +1,55 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# 实习管理平台 · 后端（Laravel 12）
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+> 这是 [临床实习教学管理平台](../README.md) 的服务端。完整的架构说明、功能清单与快速开始请看**仓库根目录的 README**。
 
-## About Laravel
+## 这一层负责什么
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+- 业务领域建模与持久化（18 张表，Eloquent 关系 + 迁移）
+- 认证与授权：Sanctum Token + spatie/laravel-permission 四角色
+- 业务规则校验：轮转分段不重叠、考勤围栏与迟到早退判定、OA 多级审批链与回写
+- **AI 工具网关**：对外暴露 13 个工具，供 AI 助手回调，权限随调用者 token
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+## 技术要点
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+| 项 | 实现 |
+|---|---|
+| 鉴权 | Laravel Sanctum，Bearer Token |
+| 权限 | `role` 中间件 + spatie 角色；菜单与接口双层过滤 |
+| 校验 | FormRequest 统一参数校验，异常统一转 `{ok:false,error}` |
+| 日期 | 一律 `date:Y-m-d` cast，`APP_TIMEZONE=Asia/Shanghai`（打卡日期语义） |
+| 复用 | 病历/病程/操作三类任务抽象为 `AbstractTaskController` |
+| 审批回写 | 请假通过后标记考勤、销假还原、换班改值班表 |
 
-## Learning Laravel
+## AI 工具网关
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework. You can also check out [Laravel Learn](https://laravel.com/learn), where you will be guided through building a modern Laravel application.
+AI 助手不直接访问数据库，所有数据通过这里拿：
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+```
+POST /api/v1/ai/tools/call
+Authorization: Bearer <用户 token>
+{ "tool": "internship_my_rotation", "arguments": { ... } }
+```
 
-## Laravel Sponsors
+13 个工具白名单：查轮转 / 值班 / 考勤 / 出勤统计 / 请假记录 / 教学活动 / 公告 / 考核 / 病历 / 待办汇总 / **提交请假**，以及教师专属的科室学生查询、待审批查询。
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+权限由 token 所属用户决定——学生调用教师专属工具返回 403。工具返回给 LLM 的日期统一经 `fmt()` 转为 `Y-m-d H:i`，避免 UTC ISO 串造成模型误读。
 
-### Premium Partners
+## 本地启动
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+```bash
+composer install
+cp .env.example .env && php artisan key:generate
+# 编辑 .env 的 DB_*（MySQL 或 SQLite）
+php artisan migrate --seed
+php artisan serve          # http://127.0.0.1:8000
+```
 
-## Contributing
+重置数据：`php artisan migrate:fresh --seed`（会清空全部业务数据）。
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+## 回归
 
-## Code of Conduct
-
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
-
-## Security Vulnerabilities
-
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+仓库根目录执行 `/usr/bin/bash scripts/smoke-api.sh`，52 项断言含 AI 工具网关 10 项。
 
 ## License
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+MIT
