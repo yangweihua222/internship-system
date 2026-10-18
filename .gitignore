@@ -1,0 +1,21 @@
+# ===== 环境/工具缓存（本机工作区，绝不入库） =====
+.workbuddy/
+.playwright-cli/
+
+# ===== 第三方安装器/二进制 =====
+tools/
+composer-setup.php
+
+# ===== 临时文件 =====
+sse.txt
+*.log
+
+# ===== 系统 =====
+.DS_Store
+Thumbs.db
+
+# ===== 兜底：任何目录下的环境变量与密钥（子目录 .gitignore 已管 vendor/node_modules/models） =====
+**/.env
+**/.env.*
+!**/.env.example
+**/.env.bak*
