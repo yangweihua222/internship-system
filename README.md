@@ -19,13 +19,15 @@
 
 ## 界面预览
 
-完整操作录屏（含 AI 助手三轮真实对话）：[docs/demo/internship-demo.webm](docs/demo/internship-demo.webm)（浏览器可直接播放）
+完整操作录屏（AI 助手：2 次工具调用 + 1 次 RAG + 观测面板反查）：[docs/demo/internship-demo.webm](docs/demo/internship-demo.webm)（浏览器可直接播放）
 
-**AI 教学助手对话**（右下角悬浮球唤起，真实回调业务数据）：
+**AI 教学助手对话**（右下角悬浮球唤起，2 次工具调用 + 1 次 RAG 检索，真实回调业务数据）：
 
-| 问值班安排 | 代提交请假 |
+| 工具① 问值班安排 | 工具② 代提交请假 |
 |---|---|
-| ![AI 查值班](docs/screenshots/12-ai-chat-duty.png) | ![AI 代请假](docs/screenshots/14-ai-chat-leave.png) |
+| ![AI 查值班](docs/screenshots/12-ai-chat-duty.png) | ![AI 代请假](docs/screenshots/13-ai-chat-leave.png) |
+| **RAG 临床知识库问答** | **观测面板反查 trace 时间瀑布** |
+| ![AI RAG 问答](docs/screenshots/14-ai-chat-rag.png) | ![观测面板](docs/screenshots/16-ai-observability-trace.png) |
 
 **业务界面**：
 
