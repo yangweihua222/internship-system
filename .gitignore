@@ -20,3 +20,6 @@ Thumbs.db
 !**/.env.example
 **/.env.bak*
 preview-github.html
+
+# 内部规划/设计文档（仅本地留存，不进仓库）
+医院项目重写规划.md
