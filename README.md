@@ -17,23 +17,23 @@
 
 ## 界面预览
 
-完整操作录屏（AI 助手：2 次工具调用 + 1 次 RAG + 观测面板反查）：[docs/demo/internship-demo.webm](docs/demo/internship-demo.webm)（浏览器可直接播放）
+完整操作录屏（AI 助手：2 次工具调用 + 1 次 RAG + 观测面板反查）：[docs/demo/internship-demo.webm](docs/demo/internship-demo.webm)（[▶ 在线播放](https://testingcf.jsdelivr.net/gh/yangweihua222/internship-system@master/docs/demo/internship-demo.webm)，GitHub 上为下载链接）
 
 **AI 教学助手对话**（右下角悬浮球唤起，2 次工具调用 + 1 次 RAG 检索，真实回调业务数据）：
 
 | 工具① 问值班安排 | 工具② 代提交请假 |
 |---|---|
-| ![AI 查值班](docs/screenshots/12-ai-chat-duty.png) | ![AI 代请假](docs/screenshots/13-ai-chat-leave.png) |
+| ![AI 查值班](https://testingcf.jsdelivr.net/gh/yangweihua222/internship-system@master/docs/screenshots/12-ai-chat-duty.png) | ![AI 代请假](https://testingcf.jsdelivr.net/gh/yangweihua222/internship-system@master/docs/screenshots/13-ai-chat-leave.png) |
 | **RAG 临床知识库问答** | **观测面板反查 trace 时间瀑布** |
-| ![AI RAG 问答](docs/screenshots/14-ai-chat-rag.png) | ![观测面板](docs/screenshots/16-ai-observability-trace.png) |
+| ![AI RAG 问答](https://testingcf.jsdelivr.net/gh/yangweihua222/internship-system@master/docs/screenshots/14-ai-chat-rag.png) | ![观测面板](https://testingcf.jsdelivr.net/gh/yangweihua222/internship-system@master/docs/screenshots/16-ai-observability-trace.png) |
 
 **业务界面**：
 
 | 工作台 | 轮转管理 |
 |---|---|
-| ![工作台](docs/screenshots/02-dashboard.png) | ![轮转管理](docs/screenshots/03-rotation.png) |
+| ![工作台](https://testingcf.jsdelivr.net/gh/yangweihua222/internship-system@master/docs/screenshots/02-dashboard.png) | ![轮转管理](https://testingcf.jsdelivr.net/gh/yangweihua222/internship-system@master/docs/screenshots/03-rotation.png) |
 | **OA 审批** | **实习任务（病历批改）** |
-| ![OA 审批](docs/screenshots/06-oa.png) | ![实习任务](docs/screenshots/07-tasks.png) |
+| ![OA 审批](https://testingcf.jsdelivr.net/gh/yangweihua222/internship-system@master/docs/screenshots/06-oa.png) | ![实习任务](https://testingcf.jsdelivr.net/gh/yangweihua222/internship-system@master/docs/screenshots/07-tasks.png) |
 
 ---
 
